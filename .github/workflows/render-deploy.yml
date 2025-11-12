@@ -57,18 +57,26 @@ jobs:
       # Se o mvn verify falhar (coverage < 80% ou teste quebrado),
       # o job para aqui e NÃO chega no Sonar nem no deploy
 
-      # # ---------- (OPCIONAL) SONARCLOUD ----------
-      # # Ative se quiser bloquear por Quality Gate do SonarCloud também.
-      # - name: SonarCloud Scan (Quality Gate)
-      #   if: ${{ success() && (github.event_name == 'push' || github.event_name == 'pull_request') }}
-      #   uses: SonarSource/sonarcloud-github-action@v2
-      #   with:
-      #     projectBaseDir: .
-      #     args: >
-      #       -Dsonar.qualitygate.wait=true
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #     SONAR_HOST_URL: https://sonarcloud.io
+      # ---------- (OPCIONAL) SONARCLOUD ----------
+      # Ative se quiser bloquear por Quality Gate do SonarCloud também.
+      - name: SonarCloud Scan (Quality Gate)
+        if: ${{ success() && (github.event_name == 'push' || github.event_name == 'pull_request') }}
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectBaseDir: .
+          args: >
+            -Dsonar.qualitygate.wait=true
+            -Dsonar.organization=claudiobianco_pipeline-ci-cd-java
+            -Dsonar.projectKey=claudiobianco
+            -Dsonar.sources=src/main/java,src/main/resources
+            -Dsonar.java.binaries=target/classes
+            -Dsonar.java.test.binaries=target/test-classes
+            -Dsonar.java.coveragePlugin=jacoco
+            -Dsonar.java.jacoco.reportPaths=target/jacoco.exec            
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }} # para PR decoration
 
       # Opcional: esperar pelo Quality Gate e falhar se reprovar
       - name: Esperar Quality Gate (opcional se usar args acima)

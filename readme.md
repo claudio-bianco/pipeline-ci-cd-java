@@ -81,3 +81,17 @@ docker build -t java-render-api:latest .
 # subir o container
 docker run --rm -p 8080:8080 --name java-render-api java-render-api:latest
 
+
+# Setup Cypress (em paralelo ao Maven)
+npm init -y
+npm install --save-dev cypress
+npx cypress open
+
+
+# com app rodando na 8080
+mvn spring-boot:run
+
+# outro terminal
+npx cypress run   # headless
+# ou
+npx cypress open  # modo interativo
