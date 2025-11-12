@@ -54,14 +54,23 @@ jobs:
           nohup java -jar target/*.jar > app.log 2>&1 &
           echo $! > app.pid
 
-      - name: Aguardar readiness da API
+      - name: Aguardar readiness da aplicação (index.html ou /api/v1/hello)
         run: |
-          set +e
+          set -e
+          BASE="http://localhost:8080"
+          echo "Aguardando aplicação responder em ${BASE} ..."
           for i in {1..60}; do
-            curl -fsS "${APP_BASE_URL}/api/v1/items?page=0&size=1" >/dev/null 2>&1 && exit 0
+            CODE_INDEX=$(curl -s -o /dev/null -w "%{http_code}" "${BASE}/index.html" || true)
+            CODE_HELLO=$(curl -s -o /dev/null -w "%{http_code}" "${BASE}/api/v1/hello" || true)
+            echo "Tentativa $i - /index.html => ${CODE_INDEX}, /api/v1/hello => ${CODE_HELLO}"
+            # Aceita 200 para index OU 200 para hello
+            if [ "$CODE_INDEX" = "200" ] || [ "$CODE_HELLO" = "200" ]; then
+              echo "Aplicação pronta."
+              exit 0
+            fi
             sleep 2
           done
-          echo "A aplicação não respondeu a tempo"; cat app.log || true; exit 1
+          echo "A aplicação não respondeu a tempo"; echo "=== app.log (tail) ==="; tail -n 300 app.log || true; exit 1
 
       # ---------- CYPRESS E2E (FRONTEND) ----------
       - name: Setup Node.js 20
