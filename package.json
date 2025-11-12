@@ -1,0 +1,17 @@
+{
+  "name": "java-api-memory",
+  "version": "1.0.0",
+  "description": "http://localhost:8080/api/v1/items?page=0&size=10",
+  "main": "index.js",
+  "scripts": {
+    "cy:run": "cypress run",
+    "cy:open": "cypress open"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "cypress": "^15.6.0"
+  }
+}

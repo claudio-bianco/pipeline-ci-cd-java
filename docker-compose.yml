@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    container_name: java-render-api
+    ports:
+      - "8080:8080"
+    environment:
+      # Perfil opcional do Spring
+      # SPRING_PROFILES_ACTIVE: dev
+      # Exemplo de customização de JVM
+      JAVA_OPTS: "-Xms256m -Xmx512m"
+    restart: unless-stopped

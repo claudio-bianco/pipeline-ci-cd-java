@@ -1,0 +1,56 @@
+name: CI/CD - Java API para Render
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Rodar testes + cobertura (mvn verify)
+        run: mvn -B clean verify
+
+      # Se o mvn verify falhar (coverage < 80% ou teste quebrado),
+      # o job para aqui e NÃO chega no Sonar nem no deploy
+
+      - name: Análise no SonarCloud
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectBaseDir: .
+          # Se preferir, pode passar args:
+          # args: >
+          #   -Dsonar.qualitygate.wait=true
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
+
+      # Opcional: esperar pelo Quality Gate e falhar se reprovar
+      - name: Esperar Quality Gate (opcional se usar args acima)
+        run: echo "Quality Gate verificado via SonarCloud (configurar em args se quiser falhar o build)."
+
+      # Opcional: build da imagem Docker (útil para garantir que o Dockerfile está OK)
+      - name: Build da imagem Docker local (validação)
+        run: docker build -t java-render-api:ci .
+
+      # Deploy para o Render via Deploy Hook
+      - name: Disparar deploy no Render
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "Chamando Deploy Hook do Render..."
+          curl -X POST "$RENDER_DEPLOY_HOOK"
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
