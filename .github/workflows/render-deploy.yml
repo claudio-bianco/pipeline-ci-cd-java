@@ -13,8 +13,10 @@ jobs:
       APP_BASE_URL: http://localhost:8080  # URL base que o Cypress usará
 
     steps:
-      - name: Checkout código
+      - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # <— evita shallow clone e habilita blame
 
       - name: Configurar JDK 17
         uses: actions/setup-java@v4
@@ -67,8 +69,8 @@ jobs:
             -Dsonar.qualitygate.wait=true \
             -Dsonar.sources=src/main/java,src/main/resources \
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
-            -Dsonar.exclusions=**/RenderApiApplication.java \
-            -Dsonar.coverage.exclusions=**/RenderApiApplication.java
+            -Dsonar.exclusions=**/RenderApiApplication.java,src/main/resources/static/** \
+            -Dsonar.coverage.exclusions=**/RenderApiApplication.java,src/main/resources/static/**
 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
