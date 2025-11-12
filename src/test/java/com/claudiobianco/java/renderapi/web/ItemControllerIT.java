@@ -1,4 +1,4 @@
-package com.claudiobianco.java.renderapi.api;
+package com.claudiobianco.java.renderapi.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
