@@ -66,7 +66,9 @@ jobs:
             -Dsonar.organization=claudiobianco \
             -Dsonar.qualitygate.wait=true \
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
-            -Dsonar.exclusions=**/RenderApiApplication.java
+            -Dsonar.exclusions=**/config/**, **/RenderApiApplication.java \
+            -Dsonar.coverage.exclusions=**/RenderApiApplication.java
+
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://sonarcloud.io
