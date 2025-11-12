@@ -106,7 +106,8 @@ jobs:
           npx cypress run \
             --config baseUrl=$APP_BASE_URL,video=true,screenshotOnRunFailure=true \
             --reporter junit \
-            --reporter-options "mochaFile=cypress/results/junit-[hash].xml,toConsole=true"
+            --reporter-options "mochaFile=cypress/results/junit-[hash].xml,toConsole=true" \
+            --spec "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}"
 
       - name: Upload artefatos do Cypress (vídeos/screenshots/resultados)
         if: always()
