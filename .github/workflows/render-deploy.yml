@@ -67,7 +67,7 @@ jobs:
           args: >
             -Dsonar.qualitygate.wait=true
             -Dsonar.organization=claudiobianco
-            -Dsonar.projectKey=claudiobianco_pipeline-ci-cd-java
+            -Dsonar.projectKey=claudio-bianco_pipeline-ci-cd-java
             -Dsonar.sources=src/main/java,src/main/resources
             -Dsonar.java.binaries=target/classes
             -Dsonar.java.test.binaries=target/test-classes
