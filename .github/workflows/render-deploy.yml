@@ -47,6 +47,11 @@ jobs:
       - name: Esperar Quality Gate (opcional se usar args acima)
         run: echo "Quality Gate verificado via SonarCloud (configurar em args se quiser falhar o build)."
 
+      - name: Remover exemplos padrão do Cypress
+        run: |
+          rm -rf cypress/e2e/1-getting-started || true
+          rm -rf cypress/e2e/2-advanced-examples || true
+      
       # ---------- INICIALIZAR APP PARA E2E ----------
       - name: Empacotar JAR (sem re-testar)
         run: mvn -B -DskipTests package
