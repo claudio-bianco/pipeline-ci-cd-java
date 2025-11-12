@@ -87,20 +87,31 @@ jobs:
             npm i
           fi
 
-      - name: Rodar Cypress (headless) contra a app
-        env:
-          APP_BASE_URL: http://localhost:8080
-        run: npx cypress run --config baseUrl=$APP_BASE_URL
+      # Define TERM para remover os warnings do tput
+      - name: Definir TERM
+        run: echo "TERM=xterm-256color" >> $GITHUB_ENV
 
-      - name: Publicar artefatos do Cypress (vídeos/screenshots)
+      - name: Rodar Cypress (headless) com reporter JUnit
+        env:
+          APP_BASE_URL: ${{ env.APP_BASE_URL }}
+        run: |
+          mkdir -p cypress/results
+          npx cypress run \
+            --config baseUrl=$APP_BASE_URL,video=true,screenshotOnRunFailure=true \
+            --reporter junit \
+            --reporter-options "mochaFile=cypress/results/junit-[hash].xml,toConsole=true"
+
+      - name: Upload artefatos do Cypress (vídeos/screenshots/resultados)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cypress-artifacts
+          name: cypress-artifacts-${{ github.run_number }}
           path: |
             cypress/videos/**
             cypress/screenshots/**
-          if-no-files-found: ignore
+            cypress/results/**/*.xml
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Finalizar aplicação
         if: always()
