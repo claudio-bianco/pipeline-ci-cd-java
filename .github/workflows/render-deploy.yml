@@ -21,36 +21,95 @@ jobs:
           java-version: '17'
           cache: maven
 
-      - name: Rodar testes + cobertura (mvn verify)
+      # ---------- TESTES + COVERAGE (gate JaCoCo ≥ 80%) ----------          
+      - name: Rodar testes + cobertura (tests + JaCoCo gate)
         run: mvn -B clean verify
 
       # Se o mvn verify falhar (coverage < 80% ou teste quebrado),
       # o job para aqui e NÃO chega no Sonar nem no deploy
 
-      - name: Análise no SonarCloud
-        uses: SonarSource/sonarcloud-github-action@v2
-        with:
-          projectBaseDir: .
-          # Se preferir, pode passar args:
-          # args: >
-          #   -Dsonar.qualitygate.wait=true
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
+      # # ---------- (OPCIONAL) SONARCLOUD ----------
+      # # Ative se quiser bloquear por Quality Gate do SonarCloud também.
+      # - name: SonarCloud Scan (Quality Gate)
+      #   if: ${{ success() && (github.event_name == 'push' || github.event_name == 'pull_request') }}
+      #   uses: SonarSource/sonarcloud-github-action@v2
+      #   with:
+      #     projectBaseDir: .
+      #     args: >
+      #       -Dsonar.qualitygate.wait=true
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     SONAR_HOST_URL: https://sonarcloud.io
 
       # Opcional: esperar pelo Quality Gate e falhar se reprovar
       - name: Esperar Quality Gate (opcional se usar args acima)
         run: echo "Quality Gate verificado via SonarCloud (configurar em args se quiser falhar o build)."
 
-      # Opcional: build da imagem Docker (útil para garantir que o Dockerfile está OK)
-      - name: Build da imagem Docker local (validação)
-        run: docker build -t java-render-api:ci .
+      # ---------- INICIALIZAR APP PARA E2E ----------
+      - name: Empacotar JAR (sem re-testar)
+        run: mvn -B -DskipTests package
 
-      # Deploy para o Render via Deploy Hook
-      - name: Disparar deploy no Render
-        if: github.ref == 'refs/heads/main'
+      - name: Iniciar aplicação em background
         run: |
-          echo "Chamando Deploy Hook do Render..."
-          curl -X POST "$RENDER_DEPLOY_HOOK"
-        env:
-          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+          nohup java -jar target/*.jar > app.log 2>&1 &
+          echo $! > app.pid
+
+      - name: Aguardar readiness da API
+        run: |
+          set +e
+          for i in {1..60}; do
+            curl -fsS "${APP_BASE_URL}/api/v1/items?page=0&size=1" >/dev/null 2>&1 && exit 0
+            sleep 2
+          done
+          echo "A aplicação não respondeu a tempo"; cat app.log || true; exit 1
+
+      # ---------- CYPRESS E2E (FRONTEND) ----------
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependências do front (Cypress)
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm i
+          fi
+
+      - name: Rodar Cypress (headless) contra a app
+        run: npx cypress run --config baseUrl=${APP_BASE_URL}
+
+      - name: Publicar artefatos do Cypress (vídeos/screenshots)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-artifacts
+          path: |
+            cypress/videos/**
+            cypress/screenshots/**
+          if-no-files-found: ignore
+
+      - name: Finalizar aplicação
+        if: always()
+        run: |
+          if [ -f app.pid ]; then
+            kill $(cat app.pid) || true
+          fi
+          sleep 1
+          pkill -f "java -jar target" || true
+          true
+
+      # # ---------- VALIDAÇÃO DO DOCKERFILE (opcional, garante build) ----------
+      # - name: Build Docker (validação)
+      #   run: docker build -t java-render-api:ci .
+
+      # # ---------- DEPLOY NO RENDER (somente push na main e tudo OK) ----------
+      # - name: Disparar deploy no Render
+      #   if: success() && github.ref == 'refs/heads/main'
+      #   run: |
+      #     echo "Chamando Deploy Hook do Render..."
+      #     curl -X POST "$RENDER_DEPLOY_HOOK"
+      #   env:
+      #     RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
