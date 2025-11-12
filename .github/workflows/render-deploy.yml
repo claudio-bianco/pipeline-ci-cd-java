@@ -10,7 +10,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      APP_BASE_URL: http://localhost:8080   # <<< define aqui    
+      APP_BASE_URL: http://localhost:8080  # URL base que o Cypress usará
 
     steps:
       - name: Checkout código
@@ -26,6 +26,33 @@ jobs:
       # ---------- TESTES + COVERAGE (gate JaCoCo ≥ 80%) ----------          
       - name: Rodar testes + cobertura (tests + JaCoCo gate)
         run: mvn -B clean verify
+
+      # ---------- UPLOAD RELATÓRIOS (JaCoCo, Surefire/Failsafe) ----------
+      - name: Upload JaCoCo (HTML + XML + exec)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-reports-${{ github.run_number }}
+          path: |
+            target/site/jacoco/**
+            target/jacoco.exec
+            target/site/jacoco/jacoco.xml
+          retention-days: 14
+          if-no-files-found: warn
+          compression-level: 6
+
+      - name: Upload JUnit/Surefire/Failsafe reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-reports-${{ github.run_number }}
+          path: |
+            target/surefire-reports/**
+            target/failsafe-reports/**
+            target/site/surefire-report.html
+          retention-days: 14
+          if-no-files-found: warn
+          compression-level: 6
 
       # Se o mvn verify falhar (coverage < 80% ou teste quebrado),
       # o job para aqui e NÃO chega no Sonar nem no deploy
@@ -131,9 +158,9 @@ jobs:
           pkill -f "java -jar target" || true
           true
 
-      # # ---------- VALIDAÇÃO DO DOCKERFILE (opcional, garante build) ----------
-      # - name: Build Docker (validação)
-      #   run: docker build -t java-render-api:ci .
+      # ---------- VALIDAÇÃO DO DOCKERFILE (opcional, garante build) ----------
+      - name: Build Docker (validação)
+        run: docker build -t java-render-api:ci .
 
       # # ---------- DEPLOY NO RENDER (somente push na main e tudo OK) ----------
       # - name: Disparar deploy no Render
