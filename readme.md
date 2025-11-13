@@ -257,6 +257,3 @@ Este projeto demonstra um ciclo **completo de entrega contínua (CI/CD)** aplica
 
 🧭 _“Infraestrutura, código e qualidade — tudo versionado, automatizado e monitorado.”_
 
-```
-
----
