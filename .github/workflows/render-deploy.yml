@@ -25,7 +25,7 @@ jobs:
           java-version: '17'
           cache: maven
 
-      # ---------- TESTES + COVERAGE (gate JaCoCo ≥ 80%) ----------          
+      # ---------- TESTES + COVERAGE (gate JaCoCo ≥ 80%) ----------
       - name: Rodar testes + cobertura (tests + JaCoCo gate)
         run: mvn -B clean verify
 
@@ -63,9 +63,9 @@ jobs:
           compression-level: 6
 
       # Se o mvn verify falhar (coverage < 80% ou teste quebrado),
-      # o job para aqui e NÃO chega no Sonar nem no deploy
+      # o job para aqui e NÃO chega no Sonar nem no Deploy
 
-      # ---------- (OPCIONAL) SONARCLOUD ----------
+      # ---------- SONARCLOUD ----------
       - name: SonarCloud Scan (via Maven)
         run: |
           mvn -B verify \
@@ -77,35 +77,11 @@ jobs:
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
             -Dsonar.exclusions=**/RenderApiApplication.java,src/main/resources/static/**,**/web/dto/**,**/ApiExceptionHandler.java,**/*Exception.java \
             -Dsonar.coverage.exclusions=**/RenderApiApplication.java,src/main/resources/static/**,**/web/dto/**,**/ApiExceptionHandler.java,**/*Exception.java
-
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://sonarcloud.io
 
-      # # Ative se quiser bloquear por Quality Gate do SonarCloud também.
-      # - name: SonarCloud Scan (Quality Gate)
-      #   if: ${{ success() && (github.event_name == 'push' || github.event_name == 'pull_request') }}
-      #   uses: SonarSource/sonarcloud-github-action@v2
-      #   with:
-      #     projectBaseDir: .
-      #     args: >
-      #       -Dsonar.qualitygate.wait=true
-      #       -Dsonar.organization=claudiobianco
-      #       -Dsonar.projectKey=claudio-bianco_pipeline-ci-cd-java
-      #       -Dsonar.sources=src/main/java,src/main/resources
-      #       -Dsonar.java.binaries=target/classes
-      #       -Dsonar.java.test.binaries=target/test-classes
-      #       -Dsonar.java.coveragePlugin=jacoco
-      #       -Dsonar.java.jacoco.reportPaths=target/jacoco.exec            
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #     SONAR_HOST_URL: https://sonarcloud.io
-      #     GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }} # para PR decoration
-
-      # Opcional: esperar pelo Quality Gate e falhar se reprovar
-      - name: Esperar Quality Gate (opcional se usar args acima)
-        run: echo "Quality Gate verificado via SonarCloud (configurar em args se quiser falhar o build)."
-
+      # ---------- Cypress ----------
       - name: Remover exemplos padrão do Cypress
         run: |
           rm -rf cypress/e2e/1-getting-started || true

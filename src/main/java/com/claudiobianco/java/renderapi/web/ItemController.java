@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/items")
 public class ItemController {
 
-    // private static final Logger log = LoggerFactory.getLogger(ItemController.class);
-    // private final ItemService service = new ItemService(); // simples para demo; em produção, @Service + @Autowired
-
     private static final Logger log = LoggerFactory.getLogger(ItemController.class);
     private final ItemService service;
 
