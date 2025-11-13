@@ -95,3 +95,11 @@ mvn spring-boot:run
 npx cypress run   # headless
 # ou
 npx cypress open  # modo interativo
+
+
+
+mvn -B -DskipITs=true clean test           # só unitários
+mvn -B failsafe:integration-test failsafe:verify  # só integração
+mvn -B clean verify                        # unit + integração + jacoco.xml + gate
+
+xdg-open target/site/jacoco/index.html  # confira que ApiExceptionHandler/Exception não aparecem

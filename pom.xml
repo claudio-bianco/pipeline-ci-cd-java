@@ -79,12 +79,12 @@
                         </dataFiles>
                         <outputDirectory>${project.build.directory}/site/jacoco</outputDirectory>
                         <excludes>
-                        <exclude>**/RenderApiApplication.class</exclude>
-                        <exclude>**/web/dto/**</exclude>
-                        <exclude>**/*Exception.class</exclude>
-                        <exclude>**/ApiExceptionHandler.class</exclude>
-                        <exclude>**/*Config.class</exclude>
-                        <exclude>**/*Configuration.class</exclude>
+                            <exclude>**/RenderApiApplication.class</exclude>
+                            <exclude>**/web/dto/**</exclude>
+                            <exclude>**/ApiExceptionHandler.class</exclude>
+                            <exclude>**/*Exception.class</exclude>
+                            <exclude>**/*Config.class</exclude>
+                            <exclude>**/*Configuration.class</exclude>
                         </excludes>
                     </configuration>
                     </execution>
@@ -110,12 +110,12 @@
                             </limit>
                             </limits>
                             <excludes>
-                            <exclude>**/RenderApiApplication*</exclude>
-                            <exclude>**/web/dto/**</exclude>
-                            <exclude>**/*Exception*</exclude>
-                            <exclude>**/ApiExceptionHandler*</exclude>
-                            <exclude>**/*Config*</exclude>
-                            <exclude>**/*Configuration*</exclude>
+                                <exclude>**/RenderApiApplication*</exclude>
+                                <exclude>**/web/dto/**</exclude>
+                                <exclude>**/ApiExceptionHandler*</exclude>
+                                <exclude>**/*Exception*</exclude>
+                                <exclude>**/*Config*</exclude>
+                                <exclude>**/*Configuration*</exclude>
                             </excludes>
                         </rule>
                         </rules>

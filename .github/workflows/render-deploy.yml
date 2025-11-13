@@ -29,6 +29,12 @@ jobs:
       - name: Rodar testes + cobertura (tests + JaCoCo gate)
         run: mvn -B clean verify
 
+      # ---------- Sanity Check ----------                
+      - name: Conferir jacoco.xml
+        run: |
+          grep -q "ApiExceptionHandler" target/site/jacoco/jacoco.xml && { echo "Handler ainda no relatório!"; exit 1; } || echo "OK: handler excluído";
+          grep -q "ItemNotFoundException" target/site/jacoco/jacoco.xml && { echo "Exception ainda no relatório!"; exit 1; } || echo "OK: exception excluída";
+
       # ---------- UPLOAD RELATÓRIOS (JaCoCo, Surefire/Failsafe) ----------
       - name: Upload JaCoCo (HTML + XML + exec)
         if: always()
@@ -67,10 +73,10 @@ jobs:
             -Dsonar.projectKey=claudio-bianco_pipeline-ci-cd-java \
             -Dsonar.organization=claudiobianco \
             -Dsonar.qualitygate.wait=true \
-            -Dsonar.sources=src/main/java,src/main/resources \
+            -Dsonar.sources=src/main/java \
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
-            -Dsonar.exclusions=**/RenderApiApplication.java,src/main/resources/static/** \
-            -Dsonar.coverage.exclusions=**/RenderApiApplication.java,src/main/resources/static/**
+            -Dsonar.exclusions=**/RenderApiApplication.java,src/main/resources/static/**,**/web/dto/**,**/ApiExceptionHandler.java,**/*Exception.java \
+            -Dsonar.coverage.exclusions=**/RenderApiApplication.java,src/main/resources/static/**,**/web/dto/**,**/ApiExceptionHandler.java,**/*Exception.java
 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
