@@ -1,4 +1,5 @@
 com/claudiobianco/java/renderapi/api/HelloControllerTests.class
+com/claudiobianco/java/renderapi/domain/ItemServiceTest.class
 com/claudiobianco/java/renderapi/RenderApiApplicationTests.class
 com/claudiobianco/java/renderapi/web/ItemControllerIT.class
 com/claudiobianco/java/renderapi/web/ItemControllerTest.class

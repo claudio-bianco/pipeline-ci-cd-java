@@ -1,4 +1,5 @@
 /home/claudio/Repos/java-api-memory/src/test/java/com/claudiobianco/java/renderapi/RenderApiApplicationTests.java
 /home/claudio/Repos/java-api-memory/src/test/java/com/claudiobianco/java/renderapi/api/HelloControllerTests.java
+/home/claudio/Repos/java-api-memory/src/test/java/com/claudiobianco/java/renderapi/domain/ItemServiceTest.java
 /home/claudio/Repos/java-api-memory/src/test/java/com/claudiobianco/java/renderapi/web/ItemControllerIT.java
 /home/claudio/Repos/java-api-memory/src/test/java/com/claudiobianco/java/renderapi/web/ItemControllerTest.java

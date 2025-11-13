@@ -17,45 +17,45 @@ import java.util.concurrent.atomic.AtomicLong;
 <span class="fc" id="L17">    private final AtomicLong idGenerator = new AtomicLong(0);</span>
 
     public PagedResponse&lt;ItemResponse&gt; list(int page, int size) {
-<span class="nc" id="L20">        List&lt;ItemResponse&gt; all = new ArrayList&lt;&gt;(store.values());</span>
-<span class="nc" id="L21">        all.sort(Comparator.comparingLong(ItemResponse::id));</span>
-<span class="nc" id="L22">        int from = Math.min(page * size, all.size());</span>
-<span class="nc" id="L23">        int to = Math.min(from + size, all.size());</span>
-<span class="nc" id="L24">        List&lt;ItemResponse&gt; slice = all.subList(from, to);</span>
-<span class="nc bnc" id="L25" title="All 2 branches missed.">        int totalPages = size == 0 ? 0 : (int) Math.ceil((double) all.size() / size);</span>
+<span class="fc" id="L20">        List&lt;ItemResponse&gt; all = new ArrayList&lt;&gt;(store.values());</span>
+<span class="fc" id="L21">        all.sort(Comparator.comparingLong(ItemResponse::id));</span>
+<span class="fc" id="L22">        int from = Math.min(page * size, all.size());</span>
+<span class="fc" id="L23">        int to = Math.min(from + size, all.size());</span>
+<span class="fc" id="L24">        List&lt;ItemResponse&gt; slice = all.subList(from, to);</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        int totalPages = size == 0 ? 0 : (int) Math.ceil((double) all.size() / size);</span>
 
-<span class="nc" id="L27">        return new PagedResponse&lt;&gt;(slice, page, size, all.size(), totalPages);</span>
+<span class="fc" id="L27">        return new PagedResponse&lt;&gt;(slice, page, size, all.size(), totalPages);</span>
     }
 
     public ItemResponse get(Long id) {
-<span class="nc" id="L31">        ItemResponse item = store.get(id);</span>
-<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (item == null) throw new ItemNotFoundException(id);</span>
-<span class="nc" id="L33">        return item;</span>
+<span class="fc" id="L31">        ItemResponse item = store.get(id);</span>
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        if (item == null) throw new ItemNotFoundException(id);</span>
+<span class="fc" id="L33">        return item;</span>
     }
 
     public ItemResponse create(ItemRequest req) {
-<span class="nc" id="L37">        long id = idGenerator.incrementAndGet();</span>
-<span class="nc" id="L38">        String now = Instant.now().toString();</span>
-<span class="nc" id="L39">        ItemResponse item = new ItemResponse(id, req.nome(), req.descricao(), req.status(), req.preco(), req.categoria(), now, now);</span>
-<span class="nc" id="L40">        store.put(id, item);</span>
-<span class="nc" id="L41">        return item;</span>
+<span class="fc" id="L37">        long id = idGenerator.incrementAndGet();</span>
+<span class="fc" id="L38">        String now = Instant.now().toString();</span>
+<span class="fc" id="L39">        ItemResponse item = new ItemResponse(id, req.nome(), req.descricao(), req.status(), req.preco(), req.categoria(), now, now);</span>
+<span class="fc" id="L40">        store.put(id, item);</span>
+<span class="fc" id="L41">        return item;</span>
     }
 
     public ItemResponse update(Long id, ItemRequest req) {
-<span class="nc" id="L45">        ItemResponse current = store.get(id);</span>
-<span class="nc bnc" id="L46" title="All 2 branches missed.">        if (current == null) throw new ItemNotFoundException(id);</span>
-<span class="nc" id="L47">        String now = Instant.now().toString();</span>
-<span class="nc" id="L48">        ItemResponse updated = new ItemResponse(</span>
-<span class="nc" id="L49">                id, req.nome(), req.descricao(), req.status(), req.preco(), req.categoria(),</span>
-<span class="nc" id="L50">                current.createdAt(), now</span>
+<span class="fc" id="L45">        ItemResponse current = store.get(id);</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (current == null) throw new ItemNotFoundException(id);</span>
+<span class="fc" id="L47">        String now = Instant.now().toString();</span>
+<span class="fc" id="L48">        ItemResponse updated = new ItemResponse(</span>
+<span class="fc" id="L49">                id, req.nome(), req.descricao(), req.status(), req.preco(), req.categoria(),</span>
+<span class="fc" id="L50">                current.createdAt(), now</span>
         );
-<span class="nc" id="L52">        store.put(id, updated);</span>
-<span class="nc" id="L53">        return updated;</span>
+<span class="fc" id="L52">        store.put(id, updated);</span>
+<span class="fc" id="L53">        return updated;</span>
     }
 
     public void delete(Long id) {
-<span class="nc" id="L57">        ItemResponse removed = store.remove(id);</span>
-<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (removed == null) throw new ItemNotFoundException(id);</span>
-<span class="nc" id="L59">    }</span>
+<span class="fc" id="L57">        ItemResponse removed = store.remove(id);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (removed == null) throw new ItemNotFoundException(id);</span>
+<span class="fc" id="L59">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
