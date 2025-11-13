@@ -1,4 +1,4 @@
-package com.claudiobianco.java.renderapi.web;
+package com.claudiobianco.java.renderapi.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;

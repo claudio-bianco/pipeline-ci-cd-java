@@ -1,3 +1,10 @@
 /home/claudio/Repos/java-api-memory/src/main/java/com/claudiobianco/java/renderapi/RenderApiApplication.java
 /home/claudio/Repos/java-api-memory/src/main/java/com/claudiobianco/java/renderapi/api/HelloController.java
-/home/claudio/Repos/java-api-memory/src/main/java/com/claudiobianco/java/renderapi/api/ItemController.java
+/home/claudio/Repos/java-api-memory/src/main/java/com/claudiobianco/java/renderapi/domain/ItemNotFoundException.java
+/home/claudio/Repos/java-api-memory/src/main/java/com/claudiobianco/java/renderapi/domain/ItemService.java
+/home/claudio/Repos/java-api-memory/src/main/java/com/claudiobianco/java/renderapi/web/ApiExceptionHandler.java
+/home/claudio/Repos/java-api-memory/src/main/java/com/claudiobianco/java/renderapi/web/ErrorResponse.java
+/home/claudio/Repos/java-api-memory/src/main/java/com/claudiobianco/java/renderapi/web/ItemController.java
+/home/claudio/Repos/java-api-memory/src/main/java/com/claudiobianco/java/renderapi/web/dto/ItemRequest.java
+/home/claudio/Repos/java-api-memory/src/main/java/com/claudiobianco/java/renderapi/web/dto/ItemResponse.java
+/home/claudio/Repos/java-api-memory/src/main/java/com/claudiobianco/java/renderapi/web/dto/PagedResponse.java

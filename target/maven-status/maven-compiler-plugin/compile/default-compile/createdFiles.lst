@@ -1,6 +1,10 @@
+com/claudiobianco/java/renderapi/domain/ItemService.class
+com/claudiobianco/java/renderapi/web/ApiExceptionHandler.class
+com/claudiobianco/java/renderapi/web/dto/PagedResponse.class
+com/claudiobianco/java/renderapi/web/dto/ItemResponse.class
 com/claudiobianco/java/renderapi/api/HelloController.class
+com/claudiobianco/java/renderapi/domain/ItemNotFoundException.class
+com/claudiobianco/java/renderapi/web/ItemController.class
 com/claudiobianco/java/renderapi/RenderApiApplication.class
-com/claudiobianco/java/renderapi/api/ItemController$ItemResponse.class
-com/claudiobianco/java/renderapi/api/ItemController$PagedResponse.class
-com/claudiobianco/java/renderapi/api/ItemController.class
-com/claudiobianco/java/renderapi/api/ItemController$ItemRequest.class
+com/claudiobianco/java/renderapi/web/ErrorResponse.class
+com/claudiobianco/java/renderapi/web/dto/ItemRequest.class
