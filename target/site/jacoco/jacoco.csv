@@ -1,10 +1,5 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 renderapi,com.claudiobianco.java.renderapi.web,ItemController,0,63,0,0,0,11,0,7,0,7
-renderapi,com.claudiobianco.java.renderapi.web,ApiExceptionHandler,0,13,0,0,0,2,0,2,0,2
 renderapi,com.claudiobianco.java.renderapi.web,ErrorResponse,0,9,0,0,0,1,0,1,0,1
-renderapi,com.claudiobianco.java.renderapi.web.dto,PagedResponse,0,18,0,0,0,1,0,1,0,1
-renderapi,com.claudiobianco.java.renderapi.web.dto,ItemRequest,0,18,0,0,0,1,0,1,0,1
-renderapi,com.claudiobianco.java.renderapi.web.dto,ItemResponse,0,27,0,0,0,1,0,1,0,1
 renderapi,com.claudiobianco.java.renderapi.domain,ItemService,159,14,8,0,26,3,9,1,5,1
-renderapi,com.claudiobianco.java.renderapi.domain,ItemNotFoundException,0,5,0,0,0,2,0,1,0,1
 renderapi,com.claudiobianco.java.renderapi.api,HelloController,0,12,0,0,0,4,0,3,0,3

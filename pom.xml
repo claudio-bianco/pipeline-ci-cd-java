@@ -49,64 +49,77 @@
                 <version>0.8.12</version>
 
                 <executions>
-                    <!-- Gera o arquivo de execução (coverage) durante o teste -->
+                    <!-- injeta agente nos unit tests -->
                     <execution>
-                        <id>prepare-agent</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
+                    <id>prepare-agent</id>
+                    <goals><goal>prepare-agent</goal></goals>
+                    <configuration>
+                        <destFile>${project.build.directory}/jacoco.exec</destFile>
+                    </configuration>
                     </execution>
 
-                    <!-- Gera o relatório após os testes -->
+                    <!-- injeta agente nos integration tests -->
                     <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                        <configuration>
+                    <id>prepare-agent-integration</id>
+                    <goals><goal>prepare-agent-integration</goal></goals>
+                    <configuration>
+                        <destFile>${project.build.directory}/jacoco-it.exec</destFile>
+                    </configuration>
+                    </execution>
+
+                    <!-- gera relatório XML agregado em verify -->
+                    <execution>
+                    <id>report</id>
+                    <phase>verify</phase>
+                    <goals><goal>report</goal></goals>
+                    <configuration>
+                        <dataFiles>
+                        <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+                        <dataFile>${project.build.directory}/jacoco-it.exec</dataFile>
+                        </dataFiles>
+                        <outputDirectory>${project.build.directory}/site/jacoco</outputDirectory>
+                        <excludes>
+                        <exclude>**/RenderApiApplication.class</exclude>
+                        <exclude>**/web/dto/**</exclude>
+                        <exclude>**/*Exception.class</exclude>
+                        <exclude>**/ApiExceptionHandler.class</exclude>
+                        <exclude>**/*Config.class</exclude>
+                        <exclude>**/*Configuration.class</exclude>
+                        </excludes>
+                    </configuration>
+                    </execution>
+
+                    <!-- gate ≥ 80% usando o agregado -->
+                    <execution>
+                    <id>check</id>
+                    <phase>verify</phase>
+                    <goals><goal>check</goal></goals>
+                    <configuration>
+                        <dataFiles>
+                        <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+                        <dataFile>${project.build.directory}/jacoco-it.exec</dataFile>
+                        </dataFiles>
+                        <rules>
+                        <rule>
+                            <element>BUNDLE</element>
+                            <limits>
+                            <limit>
+                                <counter>LINE</counter>
+                                <value>COVEREDRATIO</value>
+                                <minimum>0.80</minimum>
+                            </limit>
+                            </limits>
                             <excludes>
-                                <exclude>**/RenderApiApplication.class</exclude>
-                                <exclude>**/web/dto/**</exclude>
-                                <exclude>**/*Exception.class</exclude>
-                                <exclude>**/ApiExceptionHandler.class</exclude>
-                                <exclude>**/*Config.class</exclude>
-                                <exclude>**/*Configuration.class</exclude>
+                            <exclude>**/RenderApiApplication*</exclude>
+                            <exclude>**/web/dto/**</exclude>
+                            <exclude>**/*Exception*</exclude>
+                            <exclude>**/ApiExceptionHandler*</exclude>
+                            <exclude>**/*Config*</exclude>
+                            <exclude>**/*Configuration*</exclude>
                             </excludes>
-                        </configuration>
-                    </execution>
-
-                    <!-- Opcional: checa cobertura e FALHA o build se ficar abaixo do mínimo -->
-                    <execution>
-                        <id>check</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>BUNDLE</element>
-                                    <limits>
-                                        <!-- Exemplo: exigir 80% de linhas cobertas -->
-                                        <!-- minimum>1.0</minimum -->
-                                        <limit>
-                                            <counter>LINE</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.40</minimum>
-                                        </limit>
-                                    </limits>
-                                    <excludes>
-                                        <exclude>**/RenderApiApplication*</exclude>
-                                        <exclude>**/web/dto/**</exclude>
-                                        <exclude>**/*Exception*</exclude>
-                                        <exclude>**/ApiExceptionHandler*</exclude>
-                                        <exclude>**/*Config*</exclude>
-                                        <exclude>**/*Configuration*</exclude>
-                                    </excludes>                                    
-                                </rule>
-                            </rules>
-                        </configuration>
+                        </rule>
+                        </rules>
+                    </configuration>
                     </execution>
                 </executions>
             </plugin>
