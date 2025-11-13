@@ -1,5 +1,7 @@
 package com.claudiobianco.java.renderapi.domain;
 
+import org.springframework.stereotype.Service;
+
 import com.claudiobianco.java.renderapi.web.dto.ItemRequest;
 import com.claudiobianco.java.renderapi.web.dto.ItemResponse;
 import com.claudiobianco.java.renderapi.web.dto.PagedResponse;
@@ -8,6 +10,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Service
 public class ItemService {
 
     private final Map<Long, ItemResponse> store = new HashMap<>();
