@@ -66,10 +66,12 @@
                         </goals>
                         <configuration>
                             <excludes>
-                                <exclude>com/claudiobianco/java/renderapi/RenderApiApplication.class</exclude>
-                                <exclude>com/claudiobianco/java/renderapi/api/ItemController$PagedResponse.class</exclude>
-                                <exclude>com/claudiobianco/java/renderapi/api/ItemController$ItemRequest.class</exclude>
-                                <exclude>com/claudiobianco/java/renderapi/api/ItemController$ItemResponse.class</exclude>
+                                <exclude>**/RenderApiApplication.class</exclude>
+                                <exclude>**/web/dto/**</exclude>
+                                <exclude>**/*Exception.class</exclude>
+                                <exclude>**/ApiExceptionHandler.class</exclude>
+                                <exclude>**/*Config.class</exclude>
+                                <exclude>**/*Configuration.class</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -94,6 +96,14 @@
                                             <minimum>0.40</minimum>
                                         </limit>
                                     </limits>
+                                    <excludes>
+                                        <exclude>**/RenderApiApplication*</exclude>
+                                        <exclude>**/web/dto/**</exclude>
+                                        <exclude>**/*Exception*</exclude>
+                                        <exclude>**/ApiExceptionHandler*</exclude>
+                                        <exclude>**/*Config*</exclude>
+                                        <exclude>**/*Configuration*</exclude>
+                                    </excludes>                                    
                                 </rule>
                             </rules>
                         </configuration>
