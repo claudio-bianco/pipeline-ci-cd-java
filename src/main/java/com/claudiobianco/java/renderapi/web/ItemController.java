@@ -12,8 +12,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/items")
 public class ItemController {
 
+    // private static final Logger log = LoggerFactory.getLogger(ItemController.class);
+    // private final ItemService service = new ItemService(); // simples para demo; em produção, @Service + @Autowired
+
     private static final Logger log = LoggerFactory.getLogger(ItemController.class);
-    private final ItemService service = new ItemService(); // simples para demo; em produção, @Service + @Autowired
+    private final ItemService service;
+
+    public ItemController(ItemService service) { this.service = service; }
 
     @GetMapping
     public PagedResponse<ItemResponse> list(@RequestParam(defaultValue="0") int page,

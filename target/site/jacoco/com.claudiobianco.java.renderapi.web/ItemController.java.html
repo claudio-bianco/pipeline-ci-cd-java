@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">renderapi</a> &gt; <a href="index.source.html" class="el_package">com.claudiobianco.java.renderapi.web</a> &gt; <span class="el_source">ItemController.java</span></div><h1>ItemController.java</h1><pre class="source lang-java linenums">package com.claudiobianco.java.renderapi.web;
+
+import com.claudiobianco.java.renderapi.domain.ItemService;
+import com.claudiobianco.java.renderapi.web.dto.ItemRequest;
+import com.claudiobianco.java.renderapi.web.dto.ItemResponse;
+import com.claudiobianco.java.renderapi.web.dto.PagedResponse;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping(&quot;/api/v1/items&quot;)
+public class ItemController {
+
+    // private static final Logger log = LoggerFactory.getLogger(ItemController.class);
+    // private final ItemService service = new ItemService(); // simples para demo; em produção, @Service + @Autowired
+
+<span class="fc" id="L18">    private static final Logger log = LoggerFactory.getLogger(ItemController.class);</span>
+    private final ItemService service;
+
+<span class="fc" id="L21">    public ItemController(ItemService service) { this.service = service; }</span>
+
+    @GetMapping
+    public PagedResponse&lt;ItemResponse&gt; list(@RequestParam(defaultValue=&quot;0&quot;) int page,
+                                            @RequestParam(defaultValue=&quot;10&quot;) int size) {
+<span class="fc" id="L26">        log.info(&quot;Listando itens - page={}, size={}&quot;, page, size);</span>
+<span class="fc" id="L27">        return service.list(page, size);</span>
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    public ItemResponse getById(@PathVariable Long id) {
+<span class="fc" id="L32">        log.info(&quot;Buscando item id={}&quot;, id);</span>
+<span class="fc" id="L33">        return service.get(id);</span>
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;ItemResponse&gt; create(@RequestBody ItemRequest request) {
+<span class="fc" id="L38">        ItemResponse created = service.create(request);</span>
+<span class="fc" id="L39">        return ResponseEntity.status(201).body(created);</span>
+    }
+
+    @PutMapping(&quot;/{id}&quot;)
+    public ItemResponse update(@PathVariable Long id, @RequestBody ItemRequest request) {
+<span class="fc" id="L44">        return service.update(id, request);</span>
+    }
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;?&gt; delete(@PathVariable Long id) {
+<span class="fc" id="L49">        service.delete(id);</span>
+<span class="fc" id="L50">        return ResponseEntity.ok().body(java.util.Map.of(&quot;id&quot;, id, &quot;deleted&quot;, true, &quot;message&quot;, &quot;Item removido com sucesso&quot;));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

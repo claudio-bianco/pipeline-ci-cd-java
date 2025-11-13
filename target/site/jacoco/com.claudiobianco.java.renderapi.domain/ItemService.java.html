@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">renderapi</a> &gt; <a href="index.source.html" class="el_package">com.claudiobianco.java.renderapi.domain</a> &gt; <span class="el_source">ItemService.java</span></div><h1>ItemService.java</h1><pre class="source lang-java linenums">package com.claudiobianco.java.renderapi.domain;
+
+import org.springframework.stereotype.Service;
+
+import com.claudiobianco.java.renderapi.web.dto.ItemRequest;
+import com.claudiobianco.java.renderapi.web.dto.ItemResponse;
+import com.claudiobianco.java.renderapi.web.dto.PagedResponse;
+
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
+
+@Service
+<span class="fc" id="L14">public class ItemService {</span>
+
+<span class="fc" id="L16">    private final Map&lt;Long, ItemResponse&gt; store = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L17">    private final AtomicLong idGenerator = new AtomicLong(0);</span>
+
+    public PagedResponse&lt;ItemResponse&gt; list(int page, int size) {
+<span class="nc" id="L20">        List&lt;ItemResponse&gt; all = new ArrayList&lt;&gt;(store.values());</span>
+<span class="nc" id="L21">        all.sort(Comparator.comparingLong(ItemResponse::id));</span>
+<span class="nc" id="L22">        int from = Math.min(page * size, all.size());</span>
+<span class="nc" id="L23">        int to = Math.min(from + size, all.size());</span>
+<span class="nc" id="L24">        List&lt;ItemResponse&gt; slice = all.subList(from, to);</span>
+<span class="nc bnc" id="L25" title="All 2 branches missed.">        int totalPages = size == 0 ? 0 : (int) Math.ceil((double) all.size() / size);</span>
+
+<span class="nc" id="L27">        return new PagedResponse&lt;&gt;(slice, page, size, all.size(), totalPages);</span>
+    }
+
+    public ItemResponse get(Long id) {
+<span class="nc" id="L31">        ItemResponse item = store.get(id);</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (item == null) throw new ItemNotFoundException(id);</span>
+<span class="nc" id="L33">        return item;</span>
+    }
+
+    public ItemResponse create(ItemRequest req) {
+<span class="nc" id="L37">        long id = idGenerator.incrementAndGet();</span>
+<span class="nc" id="L38">        String now = Instant.now().toString();</span>
+<span class="nc" id="L39">        ItemResponse item = new ItemResponse(id, req.nome(), req.descricao(), req.status(), req.preco(), req.categoria(), now, now);</span>
+<span class="nc" id="L40">        store.put(id, item);</span>
+<span class="nc" id="L41">        return item;</span>
+    }
+
+    public ItemResponse update(Long id, ItemRequest req) {
+<span class="nc" id="L45">        ItemResponse current = store.get(id);</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        if (current == null) throw new ItemNotFoundException(id);</span>
+<span class="nc" id="L47">        String now = Instant.now().toString();</span>
+<span class="nc" id="L48">        ItemResponse updated = new ItemResponse(</span>
+<span class="nc" id="L49">                id, req.nome(), req.descricao(), req.status(), req.preco(), req.categoria(),</span>
+<span class="nc" id="L50">                current.createdAt(), now</span>
+        );
+<span class="nc" id="L52">        store.put(id, updated);</span>
+<span class="nc" id="L53">        return updated;</span>
+    }
+
+    public void delete(Long id) {
+<span class="nc" id="L57">        ItemResponse removed = store.remove(id);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (removed == null) throw new ItemNotFoundException(id);</span>
+<span class="nc" id="L59">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
